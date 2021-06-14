@@ -36,4 +36,4 @@ stalkee.addKeyword('frick')
 stalkee.delKeyword('frick')
 
 #retrieve tweets according to inputs using OAuth, user inputs, and instance of user object (taken from setUser)
-print(stalkee.getRelevantTweets(twApi,userInput,user))
+print(stalkee.getRelevantTweets(twApi,user))

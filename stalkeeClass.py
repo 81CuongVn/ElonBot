@@ -36,7 +36,7 @@ class Stalkee:
             print("no such keyword")
 
     #getRelevantTweets function
-    def getRelevantTweets(self, api, twitterUser, userInstance):
+    def getRelevantTweets(self, api, userInstance):
         recentTweets_id = []
         lastUserTweet_dic = {}
         relevantTweetIDs = []
@@ -51,13 +51,13 @@ class Stalkee:
         print(lastUserTweet_dic)
 
         #If the user does not exist in the csv file, create a new dictionary key
-        if twitterUser not in lastUserTweet_dic:
-            lastUserTweet_dic[twitterUser] = '0'
+        if self._userHandle not in lastUserTweet_dic:
+            lastUserTweet_dic[self._userHandle] = '0'
 
         #Using tweepy Cursor, get the max 10 most recent tweets' IDs including last most recent tweet
         #IDs stored in recentTweets_id
         for status in tweepy.Cursor(api.user_timeline, id=userInstance.id).items(10):
-            if int(status.id) >= int(lastUserTweet_dic[twitterUser]):
+            if int(status.id) >= int(lastUserTweet_dic[self._userHandle]):
                 recentTweets_id.append([status.id])
 
         #for each ID, check to see if the tweet contains the keyword/s. if it does, add into list of relevant tweets 
@@ -75,8 +75,8 @@ class Stalkee:
                         #print(status.full_text)
 
         #export recent tweet of user to csv file
-        if twitterUser in lastUserTweet_dic:    #update an existing user's most recent tweet id
-            lastUserTweet_dic[twitterUser] = recentTweets_id[0][0]
+        if self._userHandle in lastUserTweet_dic:    #update an existing user's most recent tweet id
+            lastUserTweet_dic[self._userHandle] = recentTweets_id[0][0]
             with open('lastIDs.csv', 'w', encoding='utf-8', newline='') as lastIDs:
                 writer = csv.writer(lastIDs)
                 for key in lastUserTweet_dic.keys():
@@ -84,7 +84,7 @@ class Stalkee:
         else:                                 #append new user's most recent tweet id
             with open('lastIDs.csv', 'a', encoding='utf-8', newline='') as lastIDs:
                 writer = csv.writer(lastIDs)
-                writer.writerows([[twitterUser,recentTweets_id[0][0]]])
+                writer.writerows([[self._userHandle,recentTweets_id[0][0]]])
 
         #remove duplicate tweet IDs
         finalTweetIDS = []
