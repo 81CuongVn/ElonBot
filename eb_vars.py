@@ -16,9 +16,9 @@ help_msg = """
 Happy Stalking ;)
 """
 #$stalk messages
-msgStalkNoKey = """Okay, will notify you of tweets from {}.
+msgStalkNoKey = """Okay, will notify you of tweets from **{}**.
 *Note: Use $addkey command to add keywords to look out for*"""
-msgStalkHasKey = "Okay, will notify you of tweets from {}"
+msgStalkHasKey = "Okay, will notify you of tweets from *{}*"
 
 #$addkey messages
 msgAddKeyExists = "Keyword *{}* already in keywords."
