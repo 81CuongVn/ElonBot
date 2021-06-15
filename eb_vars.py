@@ -16,9 +16,9 @@ help_msg = """
 Happy Stalking ;)
 """
 #$stalk messages
-msgStalkNoKey = """Okay, will notify you of {}'s tweets.
+msgStalkNoKey = """Okay, will notify you of tweets from {}.
 *Note: Use $addkey command to add keywords to look out for*"""
-msgStalkHasKey = "Okay, will notify you of {}'s tweets."
+msgStalkHasKey = "Okay, will notify you of tweets from {}"
 
 #$addkey messages
 msgAddKeyExists = "Keyword *{}* already in keywords."
@@ -31,6 +31,9 @@ msgDelkeyNone = "Keyword *{}* is not in your list of keywords."
 #$viewkey messages
 msgviewkeyNone = """You haven't entered any keywords yet
 *Note: Use $addkey command to add keywords to look out for*"""
+
+msgRelTweetsHas = """{} has a new tweet you might find interesting!
+See it here: https://twitter.com/{}/status/{}"""
 
 keywords = []
 

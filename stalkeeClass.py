@@ -10,8 +10,8 @@ class Stalkee:
          print("getUser method called")
          return self._userHandle
 
-    def getKeyword(self):
-         print("getKeyword method called")
+    def getKeywords(self):
+         print("getKeywords method called")
          return self._keywords
     
     #setUser method [REQUIRED]
@@ -34,6 +34,13 @@ class Stalkee:
             print(self._keywords)
         except:
             print("no such keyword")
+            
+    #clearKeaywords function
+    def clearKeys(self):
+      try:
+          self._keywords.clear()
+      except:
+          print("Unable to clear keywords")
 
     #getRelevantTweets function
     def getRelevantTweets(self, api, userInstance):
@@ -94,4 +101,4 @@ class Stalkee:
         return finalTweetIDS
 
     userHandle = property(getUser, setUser)
-    keywords = property(getKeyword, addKeyword)
+    keywords = property(getKeywords, addKeyword)
