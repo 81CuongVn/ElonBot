@@ -121,8 +121,19 @@ async def reset(ctx):
 #await message.channel.send()
 
 #TODO: main Loop
-#while (len(eb_user) != 0):
-    #relTweets = stalkee.getRelevantTweets(twApi, eb_user)
-
+#@tasks.loop(minutes = 5)
+#async def twtCheck():
+#try:
+# print(eb_commands.getUser(guildID=str(ctx.guild.id)))
+# eb_user = eb_commands.setUser(api=twApi, userString=eb_commands.getUser(guildID=str(ctx.guild.id)), guildID=str(ctx.guild.id))
+# relTweetsIds = eb_commands.getRelevantTweets(twApi, eb_user, guildID=str(ctx.guild.id))
+# print(relTweetsIds)
+# if len(relTweetsIds) != 0:
+#   for id in relTweetsIds:
+#     await ctx.message.channel.send(msgRelTweetsHas.format(eb_user.name, eb_commands.getUser(guildID=str(ctx.guild.id)), id))
+# else:
+#   await ctx.message.channel.send(eb_user.name + " has no new relevant tweets")
+#except:
+# pass
 
 cmdClient.run(eb_key)
