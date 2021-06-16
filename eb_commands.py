@@ -67,6 +67,7 @@ def getRelevantTweets(api, userInstance, guildID):
     else:
         open(guildID+'_lastIDs.csv', 'x', encoding='utf-8')
 
+
     #import most recent tweet id of user
     try:
         with open(guildID+"_lastIDs.csv", 'r', encoding='utf-8') as lastIDs:
@@ -102,6 +103,10 @@ def getRelevantTweets(api, userInstance, guildID):
                 if word in status.full_text:
                     relevantTweetIDs.append(id[0])
                     #print(status.full_text)
+
+    #check to see if recentTweets_id is empty. if so, skip updating csv file and return empty list
+    if len(recentTweets_id) == 0:
+      return recentTweets_id
 
     #export recent tweet of user to csv file
     if userHandle in lastUserTweet_dic:    #update an existing user's most recent tweet id
