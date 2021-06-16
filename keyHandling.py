@@ -1,15 +1,24 @@
 import os
 import json
 
-def createKeywordFile(guildID):
+def createKeywordFile(channelID, guildID):
+    data = {}
     if os.path.exists(str(guildID)+"_keywords.json"):
-        print(guildID+"_keywords.json exists")
+        #Update Channel ID
+        with open(str(guildID)+"_keywords.json", 'r', encoding="utf-8") as file:
+            data = json.load(file)
+        data["activeChannelID"] = channelID
+        with open(str(guildID)+"_keywords.json", 'w', encoding="utf-8") as file:
+            data = json.dump(data,file)
+        print(str(guildID)+"_keywords.json exists, updated channelID")
     else:
         with open(str(guildID)+'_keywords.json', 'x', encoding='utf-8') as file:
             initData = {
                 'guildID':str(guildID),
                 'user':'elonmusk',
-                'keywords':[]
+                'keywords':[],
+                'activeChannelID': channelID,
+                'is_active': False
             }
             json.dump(initData,file)
 

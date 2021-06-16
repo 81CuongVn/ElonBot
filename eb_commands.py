@@ -2,27 +2,29 @@ import csv
 import os
 import keyHandling
 import tweepy
+import json
 
 def getUser(guildID):
-    print("getUser method called")
+    #DEBUG print("getUser method called")
     return keyHandling.getUser(guildID)
 
 def getKeywords(guildID):
     keywords = keyHandling.getKeywords(guildID)
     if keywords != 404:
-        print("getKeywords method called")
+        #DEBUG print("getKeywords method called")
         return keywords
     else:
         return 404
 
 #setUser method [REQUIRED]
-def setUser(api, userString, guildID):
-    keyHandling.createKeywordFile(guildID)
+def setUser(api, userString, guildID, channelID):
+    keyHandling.createKeywordFile(channelID, guildID)
     keyHandling.updateUser(guildID, userString)
     user = api.get_user(userString)
     print(user.location)
     print(user.description)
     return user
+
 
 #addKeyword function
 def addKeyword(keyword, guildID):
@@ -32,7 +34,7 @@ def addKeyword(keyword, guildID):
     else:
         keywords.append(keyword)
         keyHandling.updatekeywords(guildID,keywordList=keywords)
-        print(keywords)
+        #DEBUG print(keywords)
 
 #delKeyword function
 def delKeyword(keyword, guildID):
@@ -40,11 +42,11 @@ def delKeyword(keyword, guildID):
     try:
         keywords.remove(keyword)
         keyHandling.updatekeywords(guildID,keywordList=keywords)
-        print(keywords)
+        #DEBUG print(keywords)
     except:
         print("no such keyword")
         
-#clearKeaywords function
+#clearKeywords function
 def clearKeys(guildID):
     keywords = keyHandling.getKeywords(guildID)
     if keywords != 404:
@@ -84,7 +86,7 @@ def getRelevantTweets(api, userInstance, guildID):
     #Using tweepy Cursor, get the max 10 most recent tweets' IDs including last most recent tweet
     #IDs stored in recentTweets_id
     for status in tweepy.Cursor(api.user_timeline, id=userInstance.id).items(10):
-        if int(status.id) >= int(lastUserTweet_dic[userHandle]):
+        if int(status.id) > int(lastUserTweet_dic[userHandle]):
             recentTweets_id.append([status.id])
 
     #for each ID, check to see if the tweet contains the keyword/s. if it does, add into list of relevant tweets 
@@ -119,3 +121,35 @@ def getRelevantTweets(api, userInstance, guildID):
         if i not in finalTweetIDS:
             finalTweetIDS.append(i)
     return finalTweetIDS
+
+#Make a list of guildIDs and channelIDs from json files
+def getIDs():
+    IDs = []
+    for file in os.listdir():
+        print("FILE:", file)
+        if file.endswith(".json") and not file.startswith("101_keywords"): #101_keywords.json is a test file
+            with open(file, 'r') as jsonFile:
+                print("opened:",file)
+                jsonData = json.load(jsonFile)
+                guildID = jsonData["guildID"]
+                channelID = jsonData["activeChannelID"]
+                IDs.append([guildID, channelID])
+    return(IDs)
+
+#Check guild start/stop setting
+def getIsActive(guildID):
+    with open(f"{guildID}_keywords.json", 'r') as jsonFile:
+        jsonData = json.load(jsonFile)
+        #DEBUG print(jsonData)
+        setting = jsonData["is_active"]
+        return setting
+
+#update guild start/stop setting
+def setIsActive(newSetting,guildID):
+    jsonData = []
+    with open(f"{guildID}_keywords.json", 'r') as jsonFile:
+        jsonData = json.load(jsonFile)
+
+    jsonData["is_active"] = newSetting
+    with open(f"{guildID}_keywords.json", 'w') as jsonFile:
+        json.dump(jsonData, jsonFile)

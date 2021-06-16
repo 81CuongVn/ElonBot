@@ -3,9 +3,9 @@ import keyHandling
 import csv
 import tweepy
 import os
-import requests
-import json
 import eb_commands
+import discord
+from discord.ext import tasks
 from discord.ext import commands
 
 consumer_token = os.environ['eb_tw_consumer']
@@ -20,7 +20,7 @@ twApi = tweepy.API(auth)
 #ebClient = discord.Client()
 cmdClient = commands.Bot(command_prefix="$")
 eb_userName = ''
-
+allGuilds = cmdClient.guilds
 #discord py vars
 eb_key = os.environ['ebTOKEN']
 
@@ -28,24 +28,21 @@ eb_key = os.environ['ebTOKEN']
 @cmdClient.event  #
 async def on_ready():
     print('Logged in as {0.user}'.format(cmdClient))
-
-@cmdClient.command()
-async def poop(ctx):
-    await ctx.send(help_msg)
+    twtCheck.start()
 
 @cmdClient.command()
 async def stalk(ctx):
     msgSplit = ctx.message.content.rsplit(' ')
     handle = msgSplit[1]
     #try:
-    eb_user = eb_commands.setUser(api=twApi, userString=handle, guildID=str(ctx.guild.id))
+    eb_user = eb_commands.setUser(api=twApi, userString=handle, guildID=str(ctx.guild.id), channelID=ctx.channel.id)
     eb_userName = eb_user.name
     if (len(eb_commands.getKeywords(guildID=str(ctx.guild.id))) == 0):
         await ctx.message.channel.send(msgStalkNoKey.format(eb_userName))
-        keyHandling.createKeywordFile(str(ctx.guild.id))
+        keyHandling.createKeywordFile(ctx.channel.id, str(ctx.guild.id))
     else:
         await ctx.message.channel.send(msgStalkHasKey.format(eb_userName))
-        keyHandling.createKeywordFile(str(ctx.guild.id))
+        keyHandling.createKeywordFile(ctx.channel.id, str(ctx.guild.id))
     #except:
     #    await ctx.message.channel.send('Sorry, that account cannot be found.')
 
@@ -100,7 +97,7 @@ async def clearkey(ctx):
 async def check(ctx):
     if eb_commands.getUser(guildID=str(ctx.guild.id)) != 404:
         print(eb_commands.getUser(guildID=str(ctx.guild.id)))
-        eb_user = eb_commands.setUser(api=twApi, userString=eb_commands.getUser(guildID=str(ctx.guild.id)), guildID=str(ctx.guild.id))
+        eb_user = eb_commands.setUser(api=twApi, userString=eb_commands.getUser(guildID=str(ctx.guild.id)), guildID=str(ctx.guild.id), channelID=ctx.channel.id)
         relTweetsIds = eb_commands.getRelevantTweets(twApi, eb_user, guildID=str(ctx.guild.id))
         print(relTweetsIds)
         if len(relTweetsIds) != 0:
@@ -117,23 +114,48 @@ async def reset(ctx):
         writer = csv.writer(file)
         writer.writerows([[]])
 
+@cmdClient.command()
+async def start(ctx):
+    if eb_commands.getUser(guildID=str(ctx.guild.id)) != 404:
+        if len(eb_commands.getKeywords(guildID=str(ctx.guild.id))) != 0:
+            eb_commands.setIsActive(True, ctx.guild.id)
+        else:
+            await ctx.send("Please use *$addkey <keyword>* to set up keywords to look for")
+    else:
+        await ctx.send("Please use *$stalk <twitter handle>* first to set up")
+
+@cmdClient.command()
+async def stop(ctx):
+    if eb_commands.getUser(guildID=str(ctx.guild.id)) != 404:
+        eb_commands.setIsActive(False, ctx.guild.id)
+    else:
+        await ctx.send("Please use *$stalk <twitter handle>* first to set up")
+
 #if message.content.startswith('$shutup'):
 #await message.channel.send()
 
-#TODO: main Loop
-#@tasks.loop(minutes = 5)
-#async def twtCheck():
-#try:
-# print(eb_commands.getUser(guildID=str(ctx.guild.id)))
-# eb_user = eb_commands.setUser(api=twApi, userString=eb_commands.getUser(guildID=str(ctx.guild.id)), guildID=str(ctx.guild.id))
-# relTweetsIds = eb_commands.getRelevantTweets(twApi, eb_user, guildID=str(ctx.guild.id))
-# print(relTweetsIds)
-# if len(relTweetsIds) != 0:
-#   for id in relTweetsIds:
-#     await ctx.message.channel.send(msgRelTweetsHas.format(eb_user.name, eb_commands.getUser(guildID=str(ctx.guild.id)), id))
-# else:
-#   await ctx.message.channel.send(eb_user.name + " has no new relevant tweets")
-#except:
-# pass
+@tasks.loop(seconds=30)
+async def twtCheck():
+    print("running twtCheck")
+    #Get guild and channel IDs from _keywords.json file [[<guild ID>,<channel ID>], ...]
+    IDs = eb_commands.getIDs()
+    print("GUILDS USING BOT:", IDs)
+    for g in IDs:
+        #g[0] is guildID
+        #g[1] is channelID
+        if (eb_commands.getIsActive(int(g[0]))):
+            if eb_commands.getUser(guildID=str(g[0])) != 404:
+                eb_user = eb_commands.setUser(api=twApi, userString=eb_commands.getUser(guildID=str(g[0])), guildID=str(g[0]), channelID=g[1])
+                relTweetsIds = eb_commands.getRelevantTweets(twApi, eb_user, guildID=str(g[0]))
+                #DEBUG print("relTweetsIds: ", relTweetsIds)
+                if len(relTweetsIds) != 0:
+                    for id in relTweetsIds:
+                        #DEBUG print(cmdClient.get_guild(int(g[0])).name)
+                        await cmdClient.get_guild(int(g[0])).get_channel(int(g[1])).send(msgRelTweetsHas.format(eb_user.name, eb_commands.getUser(guildID=str(g[0])), id))
+                else:
+                    await cmdClient.get_guild(int(g[0])).get_channel(int(g[1])).send(eb_user.name + " has no new relevant tweets")
+            else:
+                await cmdClient.get_guild(int(g[0])).get_channel(int(g[1])).send("Please use *$stalk <twitter handle>* first to set up")
+
 
 cmdClient.run(eb_key)
