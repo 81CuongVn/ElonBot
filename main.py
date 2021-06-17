@@ -37,10 +37,10 @@ async def stalk(ctx, twitterHandle):
     eb_user = eb_commands.setUser(api=twApi, userString=handle, guildID=str(ctx.guild.id), channelID=ctx.channel.id)
     eb_userName = eb_user.name
     if (len(eb_commands.getKeywords(guildID=str(ctx.guild.id))) == 0):
-        await ctx.message.channel.send(embed =  feedbackStalkNoKey(eb_userName))
+        await ctx.message.channel.say(embed = feedbackStalkNoKey(eb_userName))
         keyHandling.createKeywordFile(ctx.channel.id, str(ctx.guild.id))
     else:
-        await ctx.message.channel.send(embed =  feedbackStalkHasKey(eb_userName))
+        await ctx.message.channel.say(embed = feedbackStalkHasKey(eb_userName))
         keyHandling.createKeywordFile(ctx.channel.id, str(ctx.guild.id))
   except:
       await ctx.message.channel.send('Sorry, that account cannot be found.')
@@ -212,7 +212,7 @@ async def help(ctx):
 #   To fix this, we store the guild ID and the active channel ID in the json file whenever we use the "eb stalk" command (check eb stalk
 #   command for more details). Using the json file, we can get the channel it was called from, and use that channel ID to send the message
 #   to the channel of the corresponding ID.
-@tasks.loop(seconds=30)
+@tasks.loop(seconds=10)
 async def twtCheck():
     print("running twtCheck")
     #Get guild and channel IDs from _keywords.json file [[<guild ID>,<channel ID>], ...]
