@@ -34,17 +34,17 @@ async def on_ready():
 @cmdClient.command()
 async def stalk(ctx, twitterHandle):
   handle = twitterHandle
-  try:
-    eb_user = eb_commands.setUser(api=twApi, userString=handle, guildID=str(ctx.guild.id), channelID=ctx.channel.id)
-    eb_userName = eb_user.name
-    if (len(eb_commands.getKeywords(guildID=str(ctx.guild.id))) == 0):
-        await ctx.message.channel.say(embed = feedbackStalkNoKey(eb_userName))
-        keyHandling.createKeywordFile(ctx.channel.id, str(ctx.guild.id))
-    else:
-        await ctx.message.channel.say(embed = feedbackStalkHasKey(eb_userName))
-        keyHandling.createKeywordFile(ctx.channel.id, str(ctx.guild.id))
-  except:
-      await ctx.message.channel.send('Sorry, that account cannot be found.')
+  #try:
+  eb_user = eb_commands.setUser(api=twApi, userString=handle, guildID=str(ctx.guild.id), channelID=ctx.channel.id)
+  eb_userName = eb_user.name
+  if (len(eb_commands.getKeywords(guildID=str(ctx.guild.id))) == 0):
+      await ctx.message.channel.send(embed = feedbackStalkNoKey(eb_userName))
+      keyHandling.createKeywordFile(ctx.channel.id, str(ctx.guild.id))
+  else:
+      await ctx.message.channel.send(embed = feedbackStalkHasKey(eb_userName))
+      keyHandling.createKeywordFile(ctx.channel.id, str(ctx.guild.id))
+  #except:
+  #    await ctx.message.channel.send('Sorry, that account cannot be found.')
 
 # eb addkey <keyword>
 #   the addkey command will start by checking if a keywords.json file exists for the server. if a file does not exist, the bot will send a

@@ -8,6 +8,7 @@ authors = ["EduardNaldozaCP <<>>"]
 python = "^3.8"
 discord = "^1.0.1"
 tweepy = "^3.10.0"
+flask = "^2.0.1"
 
 [tool.poetry.dev-dependencies]
 
