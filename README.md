@@ -7,7 +7,7 @@
 
 *Programmers: Eduard Naldoza, Steve Ibañez, Miguel Villanueva*
 
-A Discord Bot that lets you stalk on a specific Twitter account that can notify you when a new tweet about a specific keyword is posted at any time of day every five minutes on any of your Discord servers.
+A Discord Bot that lets you stalk on a specific Twitter account that can notify you when a new tweet about a specific keyword is posted at any time of day on any of your Discord servers.
 This program primarily uses the *discord.py* and *tweepy* libraries and *Flask* for the http portion of the program. **Replit** is used to host the program, and  **UptimeRobot** is used to keep the bot running 24/7. 
  
 *if you want to have ElonBot in your discord server, contact me naldozaeduardpd@gmail.com for the authorisation link.*

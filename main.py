@@ -213,7 +213,7 @@ async def help(ctx):
 #   To fix this, we store the guild ID and the active channel ID in the json file whenever we use the "eb stalk" command (check eb stalk
 #   command for more details). Using the json file, we can get the channel it was called from, and use that channel ID to send the message
 #   to the channel of the corresponding ID.
-@tasks.loop(seconds=10)
+@tasks.loop(seconds=30)
 async def twtCheck():
     print("running twtCheck")
     #Get guild and channel IDs from _keywords.json file [[<guild ID>,<channel ID>], ...]
