@@ -4,6 +4,7 @@ import csv
 import tweepy
 import os
 import eb_commands
+from keepalive import keepalive
 from discord.ext import tasks, commands
 
 consumer_token = os.environ['eb_tw_consumer']
@@ -236,6 +237,9 @@ async def twtCheck():
                   #await cmdClient.get_guild(int(g[0])).get_channel(int(g[1])).send(embed = feedbackNoRelTwt(eb_user.name))
             else:
               await cmdClient.get_guild(int(g[0])).get_channel(int(g[1])).send(embed = em_setUpReqd)
+
+#This will run the flask program that will be pinged every ~5 minutes
+keepalive()
 
 #This will run the Discord Bot uring the Token given.
 cmdClient.run(eb_key)
