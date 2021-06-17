@@ -44,7 +44,7 @@ This program primarily uses the *discord.py* and *tweepy* libraries and *Flask* 
 ### Notes:
 
 
--	If you initiated the command **"check"**, **"start"**, **"stop"**, before entering a **"stalk"** command, the bot will ask you to put an account first.
+-	If you initiated the command **"eb check"**, **"eb start"**, **"eb stop"**, before entering a **"eb stalk"** command, the bot will ask you to put an account first.
 
 -	To change the user to be stalked, you can put the "**eb change"** command together with the new twitter account.
 
