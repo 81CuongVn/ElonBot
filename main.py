@@ -20,8 +20,8 @@ twApi = tweepy.API(auth)
 
 #ebClient = discord.Client()
 cmdClient = commands.Bot(command_prefix="eb ")
-eb_userName = ''
 allGuilds = cmdClient.guilds
+
 #discord py vars
 eb_key = os.environ['ebTOKEN']
 
@@ -34,15 +34,15 @@ async def on_ready():
 @cmdClient.command()
 async def stalk(ctx):
   msgSplit = ctx.message.content.rsplit(' ')
-  handle = msgSplit[1]
+  handle = msgSplit[2]
   #try:
   eb_user = eb_commands.setUser(api=twApi, userString=handle, guildID=str(ctx.guild.id), channelID=ctx.channel.id)
   eb_userName = eb_user.name
   if (len(eb_commands.getKeywords(guildID=str(ctx.guild.id))) == 0):
-      await ctx.message.channel.send(msgStalkNoKey.format(eb_userName))
+      await ctx.message.channel.send(embed =  feedbackStalkNoKey(eb_userName))
       keyHandling.createKeywordFile(ctx.channel.id, str(ctx.guild.id))
   else:
-      await ctx.message.channel.send(msgStalkHasKey.format(eb_userName))
+      await ctx.message.channel.send(embed =  feedbackStalkHasKey(eb_userName))
       keyHandling.createKeywordFile(ctx.channel.id, str(ctx.guild.id))
   #except:
   #    await ctx.message.channel.send('Sorry, that account cannot be found.')
@@ -50,49 +50,49 @@ async def stalk(ctx):
 @cmdClient.command()
 async def addkey(ctx):
   msgSplit = ctx.message.content.rsplit(' ')
-  keyword = msgSplit[1]
+  keyword = msgSplit[2]
   if  eb_commands.getKeywords(guildID=str(ctx.guild.id)) != 404:
       if (keyword in eb_commands.getKeywords(guildID=str(ctx.guild.id))):
-          await ctx.message.channel.send(msgAddKeyExists.format(keyword))
+          await ctx.message.channel.send(embed = feedbackAddKeyExists(keyword))
       else:
           eb_commands.addKeyword(keyword, guildID=str(ctx.guild.id))
-          await ctx.message.channel.send(msgAddKeyNew.format(keyword))
+          await ctx.message.channel.send(embed = feedbackAddKeyNew(keyword))
   else:
-      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
+      await ctx.send(embed = em_setUpReqd)
 
 @cmdClient.command()
 async def delkey(ctx):
   msgSplit = ctx.message.content.rsplit(' ')
-  keyword = msgSplit[1]
+  keyword = msgSplit[2]
   keywords = eb_commands.getKeywords(guildID=str(ctx.guild.id))
   if keywords != 404:
       if keyword not in keywords:
-          await ctx.message.channel.send(msgDelkeyNone.format(keyword))
+          await ctx.message.channel.send(embed = feedbackDelKeyNone(keyword))
       else:
           eb_commands.delKeyword(keyword, guildID=str(ctx.guild.id))
-          await ctx.message.channel.send("Keyword *" + keyword + "* removed.")
+          await ctx.message.channel.send(embed = feedbackDelKeyExists(keyword))
   else:
-      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
+      await ctx.send(embed = em_setUpReqd) #poopooo
 
 @cmdClient.command()
 async def viewkey(ctx):
   if eb_commands.getKeywords(guildID=str(ctx.guild.id)) != 404:
       if (len(eb_commands.getKeywords(guildID=str(ctx.guild.id))) == 0):
-          await ctx.message.channel.send(msgviewkeyNone)
+          await ctx.message.channel.send(embed = em_msgviewkeyNone)
       else:
           sOut = "Your current keywords are: \n"
           for x in eb_commands.getKeywords(guildID=str(ctx.guild.id)):
               sOut = sOut + "\t*- " + x + "*\n"
-          await ctx.message.channel.send(sOut)
+          await ctx.message.channel.send(embed = feedbackViewKeyHas(sOut))
   else:
-      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
+      await ctx.send(embed = em_setUpReqd)
 
 @cmdClient.command()
 async def clearkey(ctx):
   if eb_commands.clearKeys(guildID=str(ctx.guild.id)) != 404:
-      await ctx.message.channel.send('*Keywords cleared!*')
+      await ctx.message.channel.send(embed = em_clearKeys)
   else:
-      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
+      await ctx.send(embed = em_setUpReqd)
 
 @cmdClient.command()
 async def check(ctx):
@@ -103,11 +103,12 @@ async def check(ctx):
       print(relTweetsIds)
       if len(relTweetsIds) != 0:
           for id in relTweetsIds:
-              await ctx.message.channel.send(msgRelTweetsHas.format(eb_user.name, eb_commands.getUser(guildID=str(ctx.guild.id)), id))
+              await ctx.message.channel.send(embed = feedbackNewRelTwt(eb_user.name))
+              await ctx.message.channel.send(msgRelTweetsURL.format(eb_commands.getUser(guildID=str(ctx.guild.id)), id))
       else:
-          await ctx.message.channel.send(eb_user.name + " has no new relevant tweets")
+          await ctx.message.channel.send(embed = feedbackNoRelTwt(eb_user.name))
   else:
-      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
+      await ctx.send(embed = em_setUpReqd)
 
 @cmdClient.command()
 async def reset(ctx):
@@ -120,34 +121,38 @@ async def start(ctx):
   if eb_commands.getUser(guildID=str(ctx.guild.id)) != 404:
       if len(eb_commands.getKeywords(guildID=str(ctx.guild.id))) != 0:
           userName = eb_commands.getUser(guildID=str(ctx.guild.id))
-          await ctx.send(f"Now Monitoring {userName}")
+          await ctx.send(embed = feedbackStart(userName))
           eb_commands.setIsActive(True, ctx.guild.id)
       else:
-          await ctx.send("Please use *eb addkey <keyword>* to set up keywords to look for")
+          await ctx.send(embed = em_keywordsReqd)
   else:
-      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
+      await ctx.send(embed = em_setUpReqd)
 
 @cmdClient.command()
 async def stop(ctx):
   if eb_commands.getUser(guildID=str(ctx.guild.id)) != 404:
       userName = eb_commands.getUser(guildID=str(ctx.guild.id))
-      await ctx.send(f"Now Monitoring {userName}")
+      await ctx.send(embed = feedbackStop(userName))
       eb_commands.setIsActive(False, ctx.guild.id)
   else:
-      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
+      await ctx.send(embed = em_setUpReqd)
 
 @cmdClient.command()
 async def stalking(ctx):
   if eb_commands.getUser(guildID=str(ctx.guild.id)) != 404:
     eb_userHandle = eb_commands.getUser(guildID=str(ctx.guild.id))
     eb_user = eb_commands.setUser(api=twApi, userString=eb_userHandle, guildID=str(ctx.guild.id), channelID=ctx.channel.id)
-    await ctx.send(f"Currently Monitoring {eb_user.name}\nhttps://twitter.com/{eb_userHandle}")
+    await ctx.send(embed = feedbackStalking(eb_user.name))
+    await ctx.send(f"https://twitter.com/{eb_userHandle}")
   else:
-      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
+      await ctx.send(embed = em_setUpReqd)
 
-#if message.content.startswith('eb shutup'):
-#await message.channel.send()
+cmdClient.remove_command("help")
+@cmdClient.group(invoke_without_command = True)
+async def help(ctx):
+  await ctx.send(embed = help_msg)
 
+#Check for new Tweets every x seconds
 @tasks.loop(seconds=30)
 async def twtCheck():
     print("running twtCheck")
@@ -165,11 +170,12 @@ async def twtCheck():
                 if len(relTweetsIds) != 0:
                     for id in relTweetsIds:
                         #DEBUG print(cmdClient.get_guild(int(g[0])).name)
-                        await cmdClient.get_guild(int(g[0])).get_channel(int(g[1])).send(msgRelTweetsHas.format(eb_user.name, eb_commands.getUser(guildID=str(g[0])), id))
+                        await cmdClient.get_guild(int(g[0])).get_channel(int(g[1])).send(embed = feedbackNewRelTwt(eb_user.name))
+                        await cmdClient.get_guild(int(g[0])).get_channel(int(g[1])).send(msgRelTweetsURL.format(eb_commands.getUser(guildID=str(g[0])), id))
                 else:
-                    await cmdClient.get_guild(int(g[0])).get_channel(int(g[1])).send(eb_user.name + " has no new relevant tweets")
+                    await cmdClient.get_guild(int(g[0])).get_channel(int(g[1])).send(embed = feedbackNoRelTwt(eb_user.name))
             else:
-                await cmdClient.get_guild(int(g[0])).get_channel(int(g[1])).send("Please use *eb stalk <twitter handle>* first to set up")
+                await cmdClient.get_guild(int(g[0])).get_channel(int(g[1])).send(embed = em_setUpReqd)
 
 
 cmdClient.run(eb_key)
