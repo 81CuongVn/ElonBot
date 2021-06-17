@@ -17,7 +17,7 @@ Use **"eb stop"** to stop ElonBot from updating.
 
 Use **"eb clearkey"** to clear the keywords listed.
 
-Happy Stalking 😉
+Happy Stalking 😉 
 """)
 
 #$stalk messages
