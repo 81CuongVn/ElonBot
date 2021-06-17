@@ -19,7 +19,7 @@ auth.set_access_token(access_token, access_token_secret)
 twApi = tweepy.API(auth)
 
 #ebClient = discord.Client()
-cmdClient = commands.Bot(command_prefix="$")
+cmdClient = commands.Bot(command_prefix="eb ")
 eb_userName = ''
 allGuilds = cmdClient.guilds
 #discord py vars
@@ -58,7 +58,7 @@ async def addkey(ctx):
           eb_commands.addKeyword(keyword, guildID=str(ctx.guild.id))
           await ctx.message.channel.send(msgAddKeyNew.format(keyword))
   else:
-      await ctx.send("Please use *$stalk <twitter handle>* first to set up")
+      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
 
 @cmdClient.command()
 async def delkey(ctx):
@@ -72,7 +72,7 @@ async def delkey(ctx):
           eb_commands.delKeyword(keyword, guildID=str(ctx.guild.id))
           await ctx.message.channel.send("Keyword *" + keyword + "* removed.")
   else:
-      await ctx.send("Please use *$stalk <twitter handle>* first to set up")
+      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
 
 @cmdClient.command()
 async def viewkey(ctx):
@@ -85,14 +85,14 @@ async def viewkey(ctx):
               sOut = sOut + "\t*- " + x + "*\n"
           await ctx.message.channel.send(sOut)
   else:
-      await ctx.send("Please use *$stalk <twitter handle>* first to set up")
+      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
 
 @cmdClient.command()
 async def clearkey(ctx):
   if eb_commands.clearKeys(guildID=str(ctx.guild.id)) != 404:
       await ctx.message.channel.send('*Keywords cleared!*')
   else:
-      await ctx.send("Please use *$stalk <twitter handle>* first to set up")
+      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
 
 @cmdClient.command()
 async def check(ctx):
@@ -107,7 +107,7 @@ async def check(ctx):
       else:
           await ctx.message.channel.send(eb_user.name + " has no new relevant tweets")
   else:
-      await ctx.send("Please use *$stalk <twitter handle>* first to set up")
+      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
 
 @cmdClient.command()
 async def reset(ctx):
@@ -123,9 +123,9 @@ async def start(ctx):
           await ctx.send(f"Now Monitoring {userName}")
           eb_commands.setIsActive(True, ctx.guild.id)
       else:
-          await ctx.send("Please use *$addkey <keyword>* to set up keywords to look for")
+          await ctx.send("Please use *eb addkey <keyword>* to set up keywords to look for")
   else:
-      await ctx.send("Please use *$stalk <twitter handle>* first to set up")
+      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
 
 @cmdClient.command()
 async def stop(ctx):
@@ -134,7 +134,7 @@ async def stop(ctx):
       await ctx.send(f"Now Monitoring {userName}")
       eb_commands.setIsActive(False, ctx.guild.id)
   else:
-      await ctx.send("Please use *$stalk <twitter handle>* first to set up")
+      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
 
 @cmdClient.command()
 async def stalking(ctx):
@@ -143,7 +143,7 @@ async def stalking(ctx):
     eb_user = eb_commands.setUser(api=twApi, userString=eb_userHandle, guildID=str(ctx.guild.id), channelID=ctx.channel.id)
     await ctx.send(f"Currently Monitoring {eb_user.name}\nhttps://twitter.com/{eb_userHandle}")
   else:
-      await ctx.send("Please use *$stalk <twitter handle>* first to set up")
+      await ctx.send("Please use *eb stalk <twitter handle>* first to set up")
 
 #if message.content.startswith('$shutup'):
 #await message.channel.send()
