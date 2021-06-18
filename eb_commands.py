@@ -62,15 +62,15 @@ def getRelevantTweets(api, userInstance, guildID):
     lastUserTweet_dic = {}
     relevantTweetIDs = []
     
-    if os.path.exists(guildID+"_lastIDs.csv"):
+    if os.path.exists(f"./guild-files/{guildID}_lastIDs.csv"):
         print(guildID+"_lastIDs.csv exists")
     else:
-        open(guildID+'_lastIDs.csv', 'x', encoding='utf-8')
+        open(f"./guild-files/{guildID}_lastIDs.csv", 'x', encoding='utf-8')
 
 
     #import most recent tweet id of user
     try:
-        with open(guildID+"_lastIDs.csv", 'r', encoding='utf-8') as lastIDs:
+        with open(f"./guild-files/{guildID}_lastIDs.csv", 'r', encoding='utf-8') as lastIDs:
             reader = csv.reader(lastIDs)
             lastUserTweet_dic = {rows[0]:rows[1] for rows in reader}
     except:
@@ -111,12 +111,12 @@ def getRelevantTweets(api, userInstance, guildID):
     #export recent tweet of user to csv file
     if userHandle in lastUserTweet_dic:    #update an existing user's most recent tweet id
         lastUserTweet_dic[userHandle] = recentTweets_id[0][0]
-        with open(guildID+"_lastIDs.csv", 'w', encoding='utf-8', newline='') as lastIDs:
+        with open(f"./guild-files/{guildID}_lastIDs.csv", 'w', encoding='utf-8', newline='') as lastIDs:
             writer = csv.writer(lastIDs)
             for key in lastUserTweet_dic.keys():
                 lastIDs.write("%s,%s\n"%(key,lastUserTweet_dic[key]))
     else:                                 #append new user's most recent tweet id
-        with open(guildID+"_lastIDs.csv", 'a', encoding='utf-8', newline='') as lastIDs:
+        with open(f"./guild-files/{guildID}_lastIDs.csv", 'a', encoding='utf-8', newline='') as lastIDs:
             writer = csv.writer(lastIDs)
             writer.writerows([[userHandle,recentTweets_id[0][0]]])
 
@@ -130,7 +130,7 @@ def getRelevantTweets(api, userInstance, guildID):
 #Make a list of guildIDs and channelIDs from json files
 def getIDs():
     IDs = []
-    for file in os.listdir():
+    for file in os.listdir("./guild-files/"):
         print("FILE:", file)
         if file.endswith(".json") and not file.startswith("101_keywords"): #101_keywords.json is a test file
             with open(file, 'r') as jsonFile:
@@ -143,7 +143,7 @@ def getIDs():
 
 #Check guild start/stop setting
 def getIsActive(guildID):
-    with open(f"{guildID}_keywords.json", 'r') as jsonFile:
+    with open(f"./guild-files/{guildID}_keywords.json", 'r') as jsonFile:
         jsonData = json.load(jsonFile)
         #DEBUG print(jsonData)
         setting = jsonData["is_active"]
@@ -152,9 +152,9 @@ def getIsActive(guildID):
 #update guild start/stop setting
 def setIsActive(newSetting,guildID):
     jsonData = []
-    with open(f"{guildID}_keywords.json", 'r') as jsonFile:
+    with open(f"./guild-files/{guildID}_keywords.json", 'r') as jsonFile:
         jsonData = json.load(jsonFile)
 
     jsonData["is_active"] = newSetting
-    with open(f"{guildID}_keywords.json", 'w') as jsonFile:
+    with open(f"./guild-files/{guildID}_keywords.json", 'w') as jsonFile:
         json.dump(jsonData, jsonFile)
