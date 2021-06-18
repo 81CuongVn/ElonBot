@@ -266,7 +266,7 @@ async def unload(ctx, extension):
     
 @cmdClient.event #DEV ONLY
 async def on_message(message):
-  if message.content.startswith("admin_eb announce"):
+  if message.content.startswith("eb announce"):
     if message.author.id in adminIDs:
       IDs = eb_commands.getIDs()
       for g in IDs:

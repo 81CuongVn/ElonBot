@@ -133,7 +133,7 @@ def getIDs():
     for file in os.listdir("./guild-files/"):
         print("FILE:", file)
         if file.endswith(".json") and not file.startswith("101_keywords"): #101_keywords.json is a test file
-            with open(file, 'r') as jsonFile:
+            with open(f'./guild-files/{file}', 'r') as jsonFile:
                 print("opened:",file)
                 jsonData = json.load(jsonFile)
                 guildID = jsonData["guildID"]
