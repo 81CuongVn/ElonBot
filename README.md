@@ -45,6 +45,8 @@ This program primarily uses the *discord.py* and *tweepy* libraries and *Flask* 
   
   (*NOTE: Only server admins can use the eb adminOnly command*)
   
+  Type **"eb here"** Switches update channel to current channel.
+  
 
 ### Notes:
 
