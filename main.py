@@ -5,6 +5,7 @@ import tweepy
 import os
 import eb_commands
 from keepalive import keepalive
+import discord
 from discord.ext import tasks, commands
 
 consumer_token = os.environ['eb_tw_consumer']
@@ -17,6 +18,7 @@ adminIDs = [243362449351376906, 691884210776047767, 427146663891697672]
 auth = tweepy.OAuthHandler(consumer_token, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 twApi = tweepy.API(auth) #TWITTER API OBJECT
+#helpmsg = help_msg
 
 cmdClient = commands.Bot(command_prefix="eb ") #DISCORD BOT OBJECT
 allGuilds = cmdClient.guilds
@@ -244,10 +246,15 @@ async def stalking(ctx):
 cmdClient.remove_command("help")
 @cmdClient.group(invoke_without_command = True)
 async def help(ctx):
-  await ctx.send(embed = help_msg)
+  helptxt = ""
+  with open("help.txt", 'r') as helpfile:
+    helptxt = helpfile.read()
+  helpmsg = discord.Embed(title = "ELONBOT COMMANDS", description = helptxt)
+  await ctx.send(embed = helpmsg)
 
 #DEV/ADMIN ONLY COMMANDS
 # Cog Loading and Unloading commands can only be used by developers and admins
+
 @cmdClient.command() #DEV ONLY
 async def load(ctx, extension):
   if ctx.author.id in adminIDs:

@@ -1,29 +1,5 @@
 import discord
 
-help_msg = discord.Embed(title = "ELONBOT COMMANDS", description = """
-    Use "eb stalk [Twitter Handle]" to select a Twitter account to get tweets from.
-
- **"eb stalking"** check which Twitter account is currently being monitored.
-
- **"eb addkey [keyword]"** to add a keyword to look for in account's tweets.
-
- **"eb delkey [keyword]"** to remove a keyword.
-
- **"eb check"** to manually tell ElonBot to check for new tweets.
-
- **"eb start"** to make ElonBot start searching
-
- **"eb stop"** to stop ElonBot from updating.
-
- **"eb clearkey"** to clear the keywords listed.
-
- **"eb adminOnly"** Toggles Admin-Only mode; Only server admins can use commands
-
- **"eb here"** Switches update channel to current channel.
-
-Happy Stalking 😉 
-""")
-
 #$stalk messages
 def feedbackStalkNoKey(uName):
   msgStalkNoKey = f"""Okay, will notify you of tweets from **{uName}**.
