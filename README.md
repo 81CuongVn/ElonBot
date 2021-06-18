@@ -40,6 +40,11 @@ This program primarily uses the *discord.py* and *tweepy* libraries and *Flask* 
   Type "**eb stop"** to stop ElonBot from updating.
 
   Type "**eb clearkey"** to clear the keywords listed.
+  
+  Type "**eb adminOnly**" Toggles Admin-Only mode; Only server admins can use commands
+  
+  (*NOTE: Only server admins can use the eb adminOnly command*)
+  
 
 ### Notes:
 
