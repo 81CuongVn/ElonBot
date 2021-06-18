@@ -41,11 +41,20 @@ This program primarily uses the *discord.py* and *tweepy* libraries and *Flask* 
 
   Type "**eb clearkey"** to clear the keywords listed.
   
-  Type "**eb adminOnly**" Toggles Admin-Only mode; Only server admins can use commands
+  #### Cogs:
+  *Commands that can be modified, unloaded, and loaded without interrupting program*
   
-  (*NOTE: Only server admins can use the eb adminOnly command*)
+  Type "**eb adminOnly**" Toggles Admin-Only mode; Only server admins can use commands (Server Admin Only)
   
   Type **"eb here"** Switches update channel to current channel.
+  
+#### Dev-Only Commands:
+
+  Type "**eb load** *[extension]*" to select a Twitter account to get tweets from.
+  
+  Type "**eb unload** *[extension]*" to select a Twitter account to get tweets from.
+  
+  Type "**eb announce** *[announcement]*" to select a Twitter account to get tweets from.
   
 
 ### Notes:
