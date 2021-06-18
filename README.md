@@ -50,11 +50,11 @@ This program primarily uses the *discord.py* and *tweepy* libraries and *Flask* 
   
 #### Dev-Only Commands:
 
-  Type "**eb load** *[extension]*" to select a Twitter account to get tweets from.
+  Type "**eb load** *[extension]*" to load a cog into the running bot.
   
-  Type "**eb unload** *[extension]*" to select a Twitter account to get tweets from.
+  Type "**eb unload** *[extension]*" to unload a cog from the running bot.
   
-  Type "**eb announce** *[announcement]*" to select a Twitter account to get tweets from.
+  Type "**eb announce** *[announcement]*" to announce new bug fixes / patch notes.
   
 
 ### Notes:
