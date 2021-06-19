@@ -25,7 +25,6 @@ def setUser(api, userString, guildID, channelID):
     print(user.description)
     return user
 
-
 #addKeyword function
 def addKeyword(keyword, guildID):
     keywords = keyHandling.getKeywords(guildID)

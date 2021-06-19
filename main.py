@@ -122,8 +122,8 @@ async def clearkey(ctx):
   is_server_admin = ctx.author.guild_permissions.administrator
   if is_admin_only != 404:
     if is_admin_only and is_server_admin or not is_admin_only:
-      #if eb_commands.clearKeys(guildID=str(ctx.guild.id)) != 404:
-      await ctx.message.channel.send(embed = em_clearKeys)
+      if eb_commands.clearKeys(guildID=str(ctx.guild.id)) != 404:
+        await ctx.message.channel.send(embed = em_clearKeys)
   else:
       await ctx.send(embed = em_setUpReqd)
 
