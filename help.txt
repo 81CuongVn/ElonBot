@@ -1,4 +1,4 @@
-    Use "eb stalk [Twitter Handle]" to select a Twitter account to get tweets from.
+ **"eb stalk [Twitter Handle]"** to select a Twitter account to get tweets from.
 
  **"eb stalking"** check which Twitter account is currently being monitored.
 
@@ -12,10 +12,16 @@
 
  **"eb stop"** to stop ElonBot from updating.
 
- **"eb clearkey"** to clear the keywords listed.
+ **"eb activity"** to check if ElonBot is currently monitoring.
 
- **"eb adminOnly"** Toggles Admin-Only mode; Only server admins can use commands
+ **"eb clearkey"** to clear the keywords listed.
 
  **"eb here"** Switches update channel to current channel.
 
-Happy Stalking 😉
+CUSTOMISABILITY COMMANDS:
+
+ **"eb adminOnly"** Toggles Admin-Only mode; Only server admins can use commands
+ 
+ **"eb nort"** Toggles No-Retweet mode; Shows only non-retweet Tweets
+
+ **"eb mediaonly"** Toggles Media-Only mode; Shows only Video/Image Tweets 

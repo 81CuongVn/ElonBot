@@ -10,7 +10,7 @@ def createKeywordFile(channelID, guildID):
         data["activeChannelID"] = channelID
         with open(f'./guild-files/{guildID}_keywords.json', 'w', encoding="utf-8") as file:
             data = json.dump(data,file)
-        print(str(guildID)+"_keywords.json exists, updated channelID")
+        #print(str(guildID)+"_keywords.json exists, updated channelID")
     else:
         open(f'./guild-files/{guildID}_keywords.json', 'x')
         with open(f'./guild-files/{guildID}_keywords.json', 'w', encoding='utf-8') as file:
@@ -20,7 +20,9 @@ def createKeywordFile(channelID, guildID):
                 'keywords':[],
                 'activeChannelID': channelID,
                 'is_active': False,
-                'adminOnly': False
+                'adminOnly': False,
+                'mediaOnly': False,
+                'nort': False
             }
             json.dump(initData,file)
 
@@ -74,6 +76,24 @@ def isAdminOnly(guildID):
   else:
       print(guildID+"_keywords.json does not exist")
       return 404
+
+def isMediaOnly(guildID):
+  if os.path.exists(f'./guild-files/{guildID}_keywords.json'):
+      with open(f'./guild-files/{guildID}_keywords.json', 'r', encoding="utf-8") as file:
+          data = json.load(file)
+          return data["mediaOnly"]
+  else:
+      print(guildID+"_keywords.json does not exist")
+      return 404
+
+def isNort(guildID):
+  if os.path.exists(f'./guild-files/{guildID}_keywords.json'):
+      with open(f'./guild-files/{guildID}_keywords.json', 'r', encoding="utf-8") as file:
+          data = json.load(file)
+          return data["nort"]
+  else:
+      print(guildID+"_keywords.json does not exist")
+      return 404
       
 def setAdminOnly(boolVal, guildID):
   if os.path.exists(f'./guild-files/{guildID}_keywords.json'):
@@ -86,3 +106,36 @@ def setAdminOnly(boolVal, guildID):
   else:
       print(str(guildID)+"_keywords.json does not exist")
       return 404
+
+def setMediaOnly(boolVal, guildID):
+  if os.path.exists(f'./guild-files/{guildID}_keywords.json'):
+      data = {}
+      with open(f'./guild-files/{guildID}_keywords.json', 'r', encoding="utf-8") as file:
+          data = json.load(file)
+          data["mediaOnly"] = boolVal
+      with open(f'./guild-files/{guildID}_keywords.json', 'w', encoding="utf-8") as file:
+          data = json.dump(data,file)
+  else:
+      print(str(guildID)+"_keywords.json does not exist")
+      return 404
+
+def setNort(boolVal, guildID):
+  if os.path.exists(f'./guild-files/{guildID}_keywords.json'):
+      data = {}
+      with open(f'./guild-files/{guildID}_keywords.json', 'r', encoding="utf-8") as file:
+          data = json.load(file)
+          data["nort"] = boolVal
+      with open(f'./guild-files/{guildID}_keywords.json', 'w', encoding="utf-8") as file:
+          data = json.dump(data,file)
+  else:
+      print(str(guildID)+"_keywords.json does not exist")
+      return 404
+
+def getActiveStatus(guildID):
+    if os.path.exists(f'./guild-files/{guildID}_keywords.json'):
+        with open(f'./guild-files/{guildID}_keywords.json', 'r', encoding="utf-8") as file:
+            data = json.load(file)
+            return data["is_active"]
+    else:
+        print(guildID+"_keywords.json does not exist")
+        return 404

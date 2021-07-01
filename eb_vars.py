@@ -82,4 +82,10 @@ def feedbackStalking(uname):
   em_msgStart = discord.Embed(description = msgStart)
   return em_msgStart
 
+em_noUserFeedback = discord.Embed(description = "Sorry, this account does not exist or has been suspended. 😔")
+
+em_isActiveTrueFb = discord.Embed(description = "ElonBot is currently Active.")
+
+em_isActiveFalseFb = discord.Embed(description = "Sorry, ElonBot is currently Inactive. 😔")
+
 keywords = []

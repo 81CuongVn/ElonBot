@@ -6,6 +6,7 @@ import os
 import eb_commands
 from keepalive import keepalive
 import discord
+import keyHandling
 from discord.ext import tasks, commands
 
 consumer_token = os.environ['eb_tw_consumer']
@@ -40,15 +41,18 @@ async def stalk(ctx, twitterHandle):
   is_server_admin = ctx.author.guild_permissions.administrator
   if is_admin_only and is_server_admin or not is_admin_only:
     handle = twitterHandle
-    #try:
-    eb_user = eb_commands.setUser(api=twApi, userString=handle, guildID=str(ctx.guild.id), channelID=ctx.channel.id)
-    eb_userName = eb_user.name
-    if (len(eb_commands.getKeywords(guildID=str(ctx.guild.id))) == 0):
+    try:
+      eb_user = eb_commands.setUser(api=twApi, userString=handle, guildID=str(ctx.guild.id), channelID=ctx.channel.id)
+      eb_userName = eb_user.name
+      if (len(eb_commands.getKeywords(guildID=str(ctx.guild.id))) == 0):
         await ctx.message.channel.send(embed = feedbackStalkNoKey(eb_userName))
         keyHandling.createKeywordFile(ctx.channel.id, str(ctx.guild.id))
-    else:
+      else:
         await ctx.message.channel.send(embed = feedbackStalkHasKey(eb_userName))
         keyHandling.createKeywordFile(ctx.channel.id, str(ctx.guild.id))
+    except:
+      await ctx.message.channel.send(embed = em_noUserFeedback)
+
   
 # eb addkey <keyword>
 #   the addkey command will start by checking if a keywords.json file exists for the server. if a file does not exist, the bot will send a
@@ -156,10 +160,10 @@ async def check(ctx):
   if is_admin_only != 404:
     if is_admin_only and is_server_admin or not is_admin_only:
       #if eb_commands.getUser(guildID=str(ctx.guild.id)) != 404:
-      print(eb_commands.getUser(guildID=str(ctx.guild.id)))
+      #print(eb_commands.getUser(guildID=str(ctx.guild.id)))
       eb_user = eb_commands.setUser(api=twApi, userString=eb_commands.getUser(guildID=str(ctx.guild.id)), guildID=str(ctx.guild.id), channelID=ctx.channel.id)
       relTweetsIds = eb_commands.getRelevantTweets(twApi, eb_user, guildID=str(ctx.guild.id))
-      print(relTweetsIds)
+      #print(relTweetsIds)
       if len(relTweetsIds) != 0:
           for id in relTweetsIds:
               await ctx.message.channel.send(embed = feedbackNewRelTwt(eb_user.name))
@@ -229,9 +233,9 @@ async def stop(ctx):
 @cmdClient.command()
 async def stalking(ctx):
   is_admin_only = keyHandling.isAdminOnly(str(ctx.guild.id))
-  print("is_admin_only:", str(is_admin_only))
+  #print("is_admin_only:", str(is_admin_only))
   is_server_admin = ctx.author.guild_permissions.administrator
-  print("is_server_admin:", str(is_server_admin))
+  #print("is_server_admin:", str(is_server_admin))
   if is_admin_only != 404:
     if is_admin_only and is_server_admin or not is_admin_only:
       if eb_commands.getUser(guildID=str(ctx.guild.id)) != 404:
@@ -241,6 +245,91 @@ async def stalking(ctx):
         await ctx.send(f"https://twitter.com/{eb_userHandle}")
       else:
           await ctx.send(embed = em_setUpReqd)
+
+#eb active
+# This command checks if Elonbot is currently active for the current Discord sever. It takes the the is_active boolean
+# from the guild's json file and gives feedback depending on the status.
+@cmdClient.command()
+async def active(ctx):
+  is_admin_only = keyHandling.isAdminOnly(str(ctx.guild.id))
+  is_server_admin = ctx.author.guild_permissions.administrator
+  if is_admin_only != 404:
+    if is_admin_only and is_server_admin or not is_admin_only:
+      eb_isActive = eb_commands.getIsActive(guildID=str(ctx.guild.id))
+      if eb_isActive is True:
+        await ctx.send(embed = em_isActiveTrueFb)
+      else:
+        await ctx.send(embed = em_isActiveFalseFb)
+
+@cmdClient.command()
+async def mediaonly(ctx):
+  is_admin_only = keyHandling.isAdminOnly(str(ctx.guild.id))
+  is_server_admin = ctx.author.guild_permissions.administrator
+  if is_admin_only != 404:
+    if is_admin_only and is_server_admin or not is_admin_only:
+      boolVal = keyHandling.isMediaOnly(ctx.guild.id)
+      if boolVal != 404:
+        if boolVal:
+          keyHandling.setMediaOnly(False, ctx.guild.id)
+          await ctx.send("Tweets will now be **not** Media-Only")
+        else:
+          keyHandling.setMediaOnly(True, ctx.guild.id)
+          await ctx.send("Tweets will now be Media-Only")
+      else:
+        await ctx.send(embed = em_setUpReqd)
+    else:
+      await ctx.send("You do not have permission to use this command")
+  else:
+    await ctx.send(embed = em_setUpReqd)  
+
+@cmdClient.command()
+async def nort(ctx):
+  is_admin_only = keyHandling.isAdminOnly(str(ctx.guild.id))
+  is_server_admin = ctx.author.guild_permissions.administrator
+  if is_admin_only != 404:
+    if is_admin_only and is_server_admin or not is_admin_only:
+      boolVal = keyHandling.isNort(ctx.guild.id)
+      if boolVal != 404:
+        if boolVal:
+          keyHandling.setNort(False, ctx.guild.id)
+          await ctx.send("Tweets will now be any tweet")
+        else:
+          keyHandling.setNort(True, ctx.guild.id)
+          await ctx.send("Tweets will not have Retweets")
+      else:
+        await ctx.send(embed = em_setUpReqd)
+    else:
+      await ctx.send("You do not have permission to use this command")
+  else:
+    await ctx.send(embed = em_setUpReqd)  
+
+@cmdClient.command()
+async def settings(ctx):
+  is_admin_only = keyHandling.isAdminOnly(str(ctx.guild.id))
+  is_server_admin = ctx.author.guild_permissions.administrator
+  if is_admin_only != 404:
+    if is_admin_only and is_server_admin or not is_admin_only:
+      msg = "**Current Settings:**\n"
+      nortVal = keyHandling.isNort(ctx.guild.id)
+      medialVal = keyHandling.isMediaOnly(ctx.guild.id)
+      adminVal = keyHandling.isAdminOnly(ctx.guild.id)
+      if adminVal != 404:
+        msg += f"Admin-Only: *{adminVal}*\n"
+      else:
+        msg += f"Admin-Only: Error *(You might want to set-up the bot first)*\n"
+      if nortVal != 404:
+        msg += f"No-Retweets: *{nortVal}*\n"
+      else:
+        msg += f"No-Retweets: Error *(You might want to set-up the bot first)*\n"
+      if medialVal != 404:
+        msg += f"Media-Only: *{medialVal}*\n"
+      else:
+        msg += f"Media-Only: Error *(You might want to set-up the bot first)*\n"
+      await ctx.send(msg)
+    else:
+      await ctx.send("You do not have permission to use this command")
+  else:
+    await ctx.send(embed = em_setUpReqd)  
 
 #HELP MESSAGE
 cmdClient.remove_command("help")

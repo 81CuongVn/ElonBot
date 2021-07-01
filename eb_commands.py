@@ -21,8 +21,8 @@ def setUser(api, userString, guildID, channelID):
     keyHandling.createKeywordFile(channelID, guildID)
     keyHandling.updateUser(guildID, userString)
     user = api.get_user(userString)
-    print(user.location)
-    print(user.description)
+    #print(user.location)
+    #print(user.description)
     return user
 
 #addKeyword function
@@ -62,7 +62,8 @@ def getRelevantTweets(api, userInstance, guildID):
     relevantTweetIDs = []
     
     if os.path.exists(f"./guild-files/{guildID}_lastIDs.csv"):
-        print(guildID+"_lastIDs.csv exists")
+        #print(guildID+"_lastIDs.csv exists")
+        pass
     else:
         open(f"./guild-files/{guildID}_lastIDs.csv", 'x', encoding='utf-8')
 
@@ -74,7 +75,7 @@ def getRelevantTweets(api, userInstance, guildID):
             lastUserTweet_dic = {rows[0]:rows[1] for rows in reader}
     except:
         print('error csv')
-    print(lastUserTweet_dic)
+    #print(lastUserTweet_dic)
 
     userHandle = getUser(guildID)
     keywords = getKeywords(guildID)
@@ -83,25 +84,41 @@ def getRelevantTweets(api, userInstance, guildID):
     if userHandle not in lastUserTweet_dic:
         lastUserTweet_dic[userHandle] = '0'
 
-    #Using tweepy Cursor, get the max 10 most recent tweets' IDs including last most recent tweet
+    #Using tweepy Cursor, get the max 10 most recent tweets' IDs
     #IDs stored in recentTweets_id
     for status in tweepy.Cursor(api.user_timeline, id=userInstance.id).items(10):
         if int(status.id) > int(lastUserTweet_dic[userHandle]):
             recentTweets_id.append([status.id])
 
     #for each ID, check to see if the tweet contains the keyword/s. if it does, add into list of relevant tweets 
+    #print(recentTweets_id)
     for id in recentTweets_id:
         status = api.get_status(id[0], tweet_mode="extended")
         try:                    # Retweet
-            for word in keywords:
-                if word in status.retweeted_status.full_text:
+          for word in keywords:
+              if word in status.retweeted_status.full_text:
+                if not keyHandling.isNort(guildID):
+                  if keyHandling.isMediaOnly(guildID): #IF mediaOnly IS ON, FILTER OUT NON-MEDIA TWEETS
+                    if ('t.co' in status.full_text):
+                        #print('Media Appended')
+                        relevantTweetIDs.append(id[0])
+                    #else:
+                      #print("Tweet doesn't have t.co")
+                  else:
                     relevantTweetIDs.append(id[0])
                     #print("[RETWEET] ", status.retweeted_status.full_text)
         except AttributeError:  # Not a Retweet
             for word in keywords:
-                if word in status.full_text:
+              if word in status.full_text:
+                  if keyHandling.isMediaOnly(guildID): #IF mediaOnly IS ON, FILTER OUT NON-MEDIA TWEETS
+                    if ('t.co' in status.full_text):
+                      #print('Media Appended')
+                      relevantTweetIDs.append(id[0])
+                    #else:
+                      #print("Tweet doesn't have t.co")
+                  else:
                     relevantTweetIDs.append(id[0])
-                    #print(status.full_text)
+                  #print(status.full_text)
 
     #check to see if recentTweets_id is empty. if so, skip updating csv file and return empty list
     if len(recentTweets_id) == 0:
@@ -130,10 +147,10 @@ def getRelevantTweets(api, userInstance, guildID):
 def getIDs():
     IDs = []
     for file in os.listdir("./guild-files/"):
-        print("FILE:", file)
+        #print("FILE:", file)
         if file.endswith(".json") and not file.startswith("101_keywords"): #101_keywords.json is a test file
             with open(f'./guild-files/{file}', 'r') as jsonFile:
-                print("opened:",file)
+                #print("opened:",file)
                 jsonData = json.load(jsonFile)
                 guildID = jsonData["guildID"]
                 channelID = jsonData["activeChannelID"]

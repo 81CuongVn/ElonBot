@@ -41,20 +41,9 @@ This program primarily uses the *discord.py* and *tweepy* libraries and *Flask* 
 
   Type "**eb clearkey"** to clear the keywords listed.
   
-  #### Cogs:
-  *Commands that can be modified, unloaded, and loaded without interrupting program*
+  Type "**eb adminOnly**" Toggles Admin-Only mode; Only server admins can use commands
   
-  Type "**eb adminOnly**" Toggles Admin-Only mode; Only server admins can use commands (Server Admin Only)
-  
-  Type **"eb here"** Switches update channel to current channel.
-  
-#### Dev-Only Commands:
-
-  Type "**eb load** *[extension]*" to load a cog into the running bot.
-  
-  Type "**eb unload** *[extension]*" to unload a cog from the running bot.
-  
-  Type "**eb announce** *[announcement]*" to announce new bug fixes / patch notes.
+  (*NOTE: Only server admins can use the eb adminOnly command*)
   
 
 ### Notes:
