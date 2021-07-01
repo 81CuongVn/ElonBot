@@ -45,6 +45,10 @@ This program primarily uses the *discord.py* and *tweepy* libraries and *Flask* 
   
   (*NOTE: Only server admins can use the eb adminOnly command*)
   
+  Type "**eb nort**" Toggles No-Retweet mode; Shows only non-retweet Tweets
+
+  Type "**eb mediaonly**" Toggles Media-Only mode; Shows only Video/Image Tweets 
+  
 
 ### Notes:
 
