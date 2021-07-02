@@ -12,7 +12,7 @@ consumer_token = os.environ['eb_tw_consumer']
 consumer_secret = os.environ['eb_tw_csecret']
 access_token = os.environ['eb_tw_access']
 access_token_secret = os.environ['eb_tw_asecret']
-eb_key = os.environ['ebTOKEN']
+eb_key = 'ODU1MzY2NzE4NDgxODkxMzY5.YMxcVQ.oZsiwVQLDvxcrYFXjA7aIJhFaWo'#os.environ['ebTOKEN']
 adminIDs = [243362449351376906, 691884210776047767, 427146663891697672]
 
 auth = tweepy.OAuthHandler(consumer_token, consumer_secret)
@@ -20,16 +20,13 @@ auth.set_access_token(access_token, access_token_secret)
 twApi = tweepy.API(auth) #TWITTER API OBJECT
 #helpmsg = help_msg
 
-cmdClient = commands.Bot(command_prefix="eb ") #DISCORD BOT OBJECT
+cmdClient = commands.Bot(command_prefix="ebt ") #DISCORD BOT OBJECT
 allGuilds = cmdClient.guilds
 
 @cmdClient.event
 async def on_ready():
   print('Logged in as {0.user}'.format(cmdClient))
   twtCheck.start()
-
-#debug
-open(f'./guild-files/beep', 'x')
 
 # COMMANDS
 # eb stalk <twitter handle>
@@ -366,7 +363,7 @@ async def unload(ctx, extension):
     
 @cmdClient.event #DEV ONLY
 async def on_message(message):
-  if message.content.startswith("eb announce"):
+  if message.content.startswith("ebt announce"):
     if message.author.id in adminIDs:
       IDs = eb_commands.getIDs()
       for g in IDs:

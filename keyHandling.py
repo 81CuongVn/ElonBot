@@ -10,9 +10,10 @@ def createKeywordFile(channelID, guildID):
         data["activeChannelID"] = channelID
         with open(f'./guild-files/{guildID}_keywords.json', 'w', encoding="utf-8") as file:
             data = json.dump(data,file)
-        #print(str(guildID)+"_keywords.json exists, updated channelID")
+            
     else:
         open(f'./guild-files/{guildID}_keywords.json', 'x')
+        print(str(guildID)+"_keywords.json created")
         with open(f'./guild-files/{guildID}_keywords.json', 'w', encoding='utf-8') as file:
             initData = {
                 'guildID':str(guildID),
@@ -53,7 +54,7 @@ def updateUser(guildID, userInput):
         with open(f'./guild-files/{guildID}_keywords.json', 'w', encoding="utf-8") as file:
             data = json.dump(data,file)
     else:
-        print(str(guildID)+"_keywords.json does not exist")
+        print(str(guildID)+"_keywords.json does not exist [updateUser]")
         return 404
 
 def updatekeywords(guildID, keywordList):

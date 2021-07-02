@@ -12,7 +12,7 @@
 
  **"eb stop"** to stop ElonBot from updating.
 
- **"eb activity"** to check if ElonBot is currently monitoring.
+ **"eb active"** to check if ElonBot is currently monitoring.
 
  **"eb clearkey"** to clear the keywords listed.
 
@@ -25,3 +25,5 @@ CUSTOMISABILITY COMMANDS:
  **"eb nort"** Toggles No-Retweet mode; Shows only non-retweet Tweets
 
  **"eb mediaonly"** Toggles Media-Only mode; Shows only Video/Image Tweets 
+
+ *ICON ATTRIBUTION: Star vector created by catalyststuff - www.freepik.com*

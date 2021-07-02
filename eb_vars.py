@@ -86,6 +86,6 @@ em_noUserFeedback = discord.Embed(description = "Sorry, this account does not ex
 
 em_isActiveTrueFb = discord.Embed(description = "ElonBot is currently Active.")
 
-em_isActiveFalseFb = discord.Embed(description = "Sorry, ElonBot is currently Inactive. 😔")
+em_isActiveFalseFb = discord.Embed(description = "ElonBot is currently Inactive. Use *eb start* to start monitoring")
 
 keywords = []
